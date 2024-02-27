@@ -1,0 +1,68 @@
+import java.util.Random;
+import java.util.Scanner;
+
+public class GuessTheNumberGame {
+    public static void main(String[] args) {
+        playGame();
+    }
+
+    static void playGame() {
+        Scanner scanner = new Scanner(System.in);
+        Random random = new Random();
+
+        int lowerLimit = 1;
+        int upperLimit = 100;
+        int maxAttempts = 10;
+
+        int totalScore = 0;
+        int rounds = 0;
+
+        while (true) {
+            rounds++;
+            System.out.println("\nRound " + rounds);
+
+            int secretNumber = random.nextInt(upperLimit - lowerLimit + 1) + lowerLimit;
+            int attemptsLeft = maxAttempts;
+
+            int roundScore = guessTheNumber(secretNumber, lowerLimit, upperLimit, maxAttempts, scanner);
+
+            totalScore += roundScore;
+
+            System.out.println("\nCurrent Score: " + totalScore);
+
+            System.out.print("Do you want to play again? (yes/no): ");
+            String playAgain = scanner.next().toLowerCase();
+
+            if (!playAgain.equals("yes")) {
+                break;
+            }
+        }
+
+        System.out.println("\nGame Over! You played " + rounds + " rounds and your total score is " + totalScore + ".");
+        scanner.close();
+    }
+
+    static int guessTheNumber(int secretNumber, int lowerLimit, int upperLimit, int maxAttempts, Scanner scanner) {
+        int attemptsLeft = maxAttempts;
+
+        while (attemptsLeft > 0) {
+            System.out.print("Guess the number between " + lowerLimit + " and " + upperLimit + ": ");
+            int userGuess = scanner.nextInt();
+
+            if (userGuess == secretNumber) {
+                System.out.println("Congratulations! You guessed the correct number " + secretNumber + "!");
+                return 1; // 1 point for a correct guess
+            } else if (userGuess < secretNumber) {
+                System.out.println("Too low. Try again!");
+            } else {
+                System.out.println("Too high. Try again!");
+            }
+
+            attemptsLeft--;
+            System.out.println("Attempts left: " + attemptsLeft);
+        }
+
+        System.out.println("Sorry, you've run out of attempts. The correct number was " + secretNumber + ".");
+        return 0; // 0 points for an incorrect guess
+    }
+}
